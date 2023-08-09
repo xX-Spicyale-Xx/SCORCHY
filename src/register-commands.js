@@ -6,6 +6,7 @@ const commands = [
         name:'sayhello',
         description: 'Replies back!'
     },
+     
     {
         name:'add',
         description: 'Add two numbers',
@@ -29,10 +30,16 @@ const commands = [
             }
         ]
     },
+
     {
         name:'aboutme',
         description: 'Find out more!'
-    }
+    },
+
+    {
+        name: 'deez',
+        description: 'Joe'
+    },
 ];
 
 

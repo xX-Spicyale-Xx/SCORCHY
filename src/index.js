@@ -63,6 +63,10 @@ client.on('interactionCreate', (interaction) => {
 
         interaction.reply({embeds:[embed]});
     }
+
+    if (interaction.commandName === 'deez'){
+        interaction.reply(`I’m a gay teenage boy that was groomed into believing I was a trans woman online.`)
+    }
 })
 
 client.login(process.env.TOKEN);
