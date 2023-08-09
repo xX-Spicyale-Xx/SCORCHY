@@ -39,7 +39,7 @@ const commands = [
     {
         name: 'deez',
         description: 'Joe'
-    },
+    }
 ];
 
 
