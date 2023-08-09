@@ -37,9 +37,9 @@ const commands = [
     },
 
     {
-        name: 'deez',
-        description: 'Joe'
-    }
+        name:'notaboutme',
+        description: 'Find out more!'
+    },
 ];
 
 
