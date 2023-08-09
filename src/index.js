@@ -65,7 +65,7 @@ client.on('interactionCreate', (interaction) => {
     }
 
     if (interaction.commandName === 'deez'){
-        interaction.reply(`I’m a gay teenage boy that was groomed into believing I was a trans woman online.`)
+        interaction.reply(`I’m a gay teenage boy that was groomed into believing I was a trans woman online.`);
     }
 })
 
