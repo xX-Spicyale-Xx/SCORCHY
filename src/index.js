@@ -3,9 +3,9 @@ const { REST } = require('@discordjs/rest');
 const { Routes } = require('discord-api-types/v9');
 const { SlashCommandBuilder } = require('@discordjs/builders');
 
-const token = 'MTEzOTExNzU0NDA2Njc5MzUyMg.G_WbXq.p5RITuljrqEbYi834Ly7-uViRVVeDaMIzOGsAM';
-const clientId = '1139117544066793522';
-const guildId = '1139117312620896296';
+const token = process.env.TOKEN;
+const clientId = process.env.CLIENT_ID;
+const guildId = process.env.CLIENT_ID;
 
 const commands = [
     new SlashCommandBuilder()
