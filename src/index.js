@@ -10,7 +10,7 @@ class NumberPuzzle {
         this.state = [[1, 2, 3],
                       [4, 5, 6],
                       [7, 8, 0]];
-        this.latest_message_id = ''
+        this.message_id = ''
 
         for (let i = 0; i < 1000; i++){
             let direction = ['up', 'down', 'left', 'right'][Math.floor(Math.random() * 4)]
@@ -93,11 +93,6 @@ const commands = [
     new SlashCommandBuilder()
         .setName('game')
         .setDescription('Play a game! with yourself ofc you lonely fuck'),
-
-    new SlashCommandBuilder()
-        .setName('ping')
-        .setDescription('Bot Latency'),
-
 ].map(command => command.toJSON());
 
 const rest = new REST({ version: '10' }).setToken(token);
@@ -196,11 +191,6 @@ let roles = [
 
 client.once('ready', async () => {
     console.log(`Logged in as ${client.user.tag}!`);
-
-    client.user.setActivity({
-        name: "with femboys",
-    })
-
     try{
         const channel = await client.channels.cache.get('1139202445281607780');
         if(!channel){
@@ -315,8 +305,8 @@ client.on('interactionCreate', async interaction => {
     }
 
     if (commandName === 'ping'){
-        currentTimestamp
-        const sentTimestamp = interaction.currentTimestamp;
+        const sentTimestamp = message.createdTimestamp;
+        const currentTimestamp = Date.now();
         const ping = currentTimestamp - sentTimestamp;
 
         message.reply(`Pong! Bot's ping is ${ping}ms.`);
@@ -325,13 +315,13 @@ client.on('interactionCreate', async interaction => {
     if (commandName === 'game'){
         const game = new NumberPuzzle(interaction.user);
         games.push(game);
-        let messageContent = `${interaction.user}'s game:`
+        let messageContent = `${interaction.user}'s game:\n`
         let gameState = game.state;
         for (let row = 0; row < 3; row++){
             for (let column = 0; column < 3; column++){
                 switch (gameState[row][column]){
                     case 0:
-                        messageContent += ':white_large_square';
+                        messageContent += ':white_large_square:';
                         break;
                     case 1:
                         messageContent += ':one:';
@@ -366,7 +356,100 @@ client.on('interactionCreate', async interaction => {
         message.react('⬇️');
         message.react('⬅️');
         message.react('➡️');
-        game.latest_message_id = message.id;
+        game.message_id = message.id;
+    }
+});
+
+client.on('messageReactionAdd', async (reaction, user) => {
+    if (user.bot) return; // Ignore reactions from bots
+
+    direction_emojis = ['⬆️', '⬇️', '⬅️', '➡️']
+    games.forEach((game) =>{
+        direction_emojis.forEach(async (emoji) =>{
+            if (reaction.emoji.name === emoji && user === game.player){
+
+                switch(emoji){
+                    case '⬆️':
+                        game.move('up');
+                        break;
+                    case '⬇️':
+                        game.move('down');
+                        break;
+                    case '⬅️':
+                        game.move('left');
+                        break;
+                    case '➡️':
+                        game.move('right');
+                        break;
+                }
+
+                let messageContent = `${user}'s game:\n`
+                let gameState = game.state;
+                for (let row = 0; row < 3; row++){
+                    for (let column = 0; column < 3; column++){
+                        switch (gameState[row][column]){
+                            case 0:
+                                messageContent += ':white_large_square:';
+                                break;
+                            case 1:
+                                messageContent += ':one:';
+                                break;
+                            case 2:
+                                messageContent += ':two:';
+                                break;
+                            case 3:
+                                messageContent += ':three:';
+                                break;
+                            case 4:
+                                messageContent += ':four:';
+                                break;
+                            case 5:
+                                messageContent += ':five:';
+                                break;
+                            case 6:
+                                messageContent += ':six:';
+                                break;
+                            case 7:
+                                messageContent += ':seven:';
+                                break;
+                            case 8:
+                                messageContent += ':eight:';
+                                break;
+                        }
+                    }
+                    messageContent += '\n';
+                }
+                const channel = client.channels.cache.get('1138410099430408252');
+                const message = await channel.send({ content: messageContent, fetchReply: true });
+                message.react('⬆️');
+                message.react('⬇️');
+                message.react('⬅️');
+                message.react('➡️');
+                game.message_id = message.id;
+                return;
+            }
+        });
+    });
+
+    direction_emojis = ['⬆️', '⬇️', '⬅️', '➡️']
+    direction_emojis.forEach((emoji) =>{
+        if (reaction.emoji.name === emoji){
+            games.forEach(async (game) =>{
+
+            });
+        }
+        return;
+    });
+
+    // Check if the reaction is on the expected message
+    if (reaction.message.content === 'React to this message!') {
+        if (reaction.emoji.name === '👍') {
+            // Perform action for thumbs up reaction
+            await reaction.message.channel.send('You reacted with a thumbs up!');
+        } else if (reaction.emoji.name === '👎') {
+            // Perform action for thumbs down reaction
+            await reaction.message.channel.send('You reacted with a thumbs down!');
+        }
     }
 });
 
