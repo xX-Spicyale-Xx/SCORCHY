@@ -1,7 +1,6 @@
-class Game {
-    constructor(player, message) {
+class NumberPuzzle {
+    constructor(player) {
         this.player = player;
-        this.message = message;
         this.state = [[1, 2, 3],
                       [4, 5, 6],
                       [7, 8, 0]]
