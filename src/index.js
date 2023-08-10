@@ -126,7 +126,7 @@ let roles = [
 client.once('ready', async () => {
     console.log(`Logged in as ${client.user.tag}!`);
     try{
-        const channel = await client.channels.cache.get('1138410099430408252');
+        const channel = await client.channels.cache.get('1139202445281607780');
         if(!channel){
             console.log("Channel not found!")
             return;
@@ -150,10 +150,8 @@ client.once('ready', async () => {
             rows.push(row);
         }
 
-        console.log(rows[2].components.length)
-
         await channel.send({
-            content: 'Select your colour role below!',
+            content: '**Select your colour role below!**',
             components: [rows[0], rows[1], rows[2], rows[3]]
         });
 
@@ -176,6 +174,31 @@ client.on('messageCreate', msg => {
         msg.reply('https://youtu.be/wmKtZRouzJM');
     }
 });
+
+client.on('interactionCreate', async (interaction) => {
+    if (!interaction.isButton()) return;
+
+    else {
+        const roleToAdd = interaction.guild.roles.cache.get(interaction.customId);
+        const hasRole = interaction.member.roles.cache.has(interaction.customId);
+
+        if (hasRole) {
+            await interaction.member.roles.remove(roleToAdd);
+            console.log("line 1 works")
+            await interaction.reply({ content: `The role: ${roleToAdd.name} has been removed.`, ephemeral: true });
+            return;
+        }
+        if (roleToAdd) {
+            const member = interaction.member;
+            if (member) {
+                await member.roles.add(roleToAdd);
+                await interaction.reply({ content: `You've been given the role: ${roleToAdd.name}`, ephemeral: true });
+            }
+        } else {
+            await interaction.reply({ content: 'Role not found.', ephemeral: true });
+        }
+    }
+})
 
 client.on('interactionCreate', async interaction => {
     if(!interaction.isChatInputCommand()) return;
