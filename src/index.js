@@ -1,50 +1,75 @@
-require('dotenv').config();
-const { Client, IntentsBitField, userMention, User , EmbedBuilder, Guild} = require('discord.js')
+const { Client, GatewayIntentBits, EmbedBuilder } = require('discord.js');
+const { REST } = require('@discordjs/rest');
+const { Routes } = require('discord-api-types/v9');
+const { SlashCommandBuilder } = require('@discordjs/builders');
 
-const client= new Client({
-    intents: [
-        IntentsBitField.Flags.Guilds,
-        IntentsBitField.Flags.GuildMembers,
-        IntentsBitField.Flags.GuildMessages,
-        IntentsBitField.Flags.MessageContent,
-    ]
+const token = 'MTEzOTExNzU0NDA2Njc5MzUyMg.G_WbXq.p5RITuljrqEbYi834Ly7-uViRVVeDaMIzOGsAM';
+const clientId = '1139117544066793522';
+const guildId = '1139117312620896296';
+
+const commands = [
+    new SlashCommandBuilder()
+        .setName('sayhello')
+        .setDescription('Replies back!'),
+
+    new SlashCommandBuilder()
+        .setName('add')
+        .setDescription('Add two numbers.')
+        .addNumberOption(option => {
+            option.setName('first-number')
+            .setRequired(true)
+            .setDescription('The first number you want to add!')
+        })
+        .addNumberOption(option => {
+            option.setName('second-number')
+            .setRequired(true)
+            .setDescription('The second number you want to add!')
+        }),
+
+    new SlashCommandBuilder()
+        .setName('aboutme')
+        .setDescription('Find out more about me!'),
+].map(command => command.toJSON());
+
+const rest = new REST({ version: '10' }).setToken(token);
+
+(async () => {
+    try {
+        console.log('Started refreshing application (/) commands.');
+
+        await rest.put(
+            Routes.applicationGuildCommands(clientId, guildId),
+            { body: commands },
+        );
+
+        console.log('Successfully reloaded application (/) commands.');
+    } catch (error) {
+        console.error(error);
+    }
+})();
+
+const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMembers, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent]});
+
+client.once('ready', () => {
+    console.log(`Logged in as ${client.user.tag}!`);
 });
 
-client.on('ready', (c) =>{
-    console.log(`${c.user.tag} is online`);
-});
-
-client.on('messageCreate', (message) => {
-    if(message.author.bot){
-        return
-    }
-
-    if(message.content === 'hello'){
-        message.reply('Yo Yo bro!');
-    }
-
-    if(message.content.includes(' whit ') || message.content === 'whit'){
-        message.reply('https://youtu.be/wmKtZRouzJM');
-    }
-});
-
-client.on('interactionCreate', (interaction) => {
+client.on('interactionCreate', async interaction => {
     if(!interaction.isChatInputCommand()) return;
 
-    if(interaction.commandName === 'sayhello'){
-        interaction.reply(`heya ${interaction.user}!`)
+    const { commandName } = interaction;
+
+    if (commandName === 'sayhello'){
+        await interaction.reply(`heya ${interaction.user}!`);
     }
 
-    if(interaction.commandName === 'add'){
+    if (commandName === 'add'){
         const num1 = interaction.options.get('first-number').value;
         const num2 = interaction.options.get('second-number').value;
-        interaction.reply(`The sum is ${num1 + num2}`)
+        await interaction.reply(`The sum is ${num1 + num2}`);
     }
 
-    if(interaction.commandName === 'aboutme'){
-
-       // console.log(interaction);
-
+    if (commandName === 'aboutme'){
         const embed = new EmbedBuilder()
             .setTitle("Welcome!")
             .setThumbnail()
@@ -61,12 +86,8 @@ client.on('interactionCreate', (interaction) => {
                 inline: true,
             });
 
-        interaction.reply({embeds:[embed]});
+        await interaction.reply({embeds:[embed]});
     }
+});
 
-    if (interaction.commandName === 'notaboutme'){
-        interaction.reply(`I’m a gay teenage boy that was groomed into believing I was a trans woman online.`);
-    }
-})
-
-client.login(process.env.TOKEN);
+client.login(token);
