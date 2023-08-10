@@ -178,10 +178,11 @@ client.on('messageCreate', msg => {
 });
 
 client.on('interactionCreate', async interaction => {
-    if(!interaction.isChatInputCommand()) return;
+    if(!interaction.isChatInputCommand() && !interaction.isButton()) return;
 
     const { commandName } = interaction;
 
+    // Command Reponses
     if (commandName === 'sayhello'){
         await interaction.reply(`heya ${interaction.user}!`);
     }
@@ -222,6 +223,12 @@ client.on('interactionCreate', async interaction => {
         me to start using She/Her or They/Them pronouns. Me being a VERY young teenager, believed this, and came out 
         as trans online. They encouraged me to shave my legs and post images of me in thigh highs and skirts in lewd 
         poses and videos, KNOWING I WAS 13 AT THE TIME.`);
+    }
+
+    console.log(interaction);
+    //Button responses
+    if (interaction.id === '1138403959464271932'){
+        await interaction.channel.send("red");
     }
 });
 
