@@ -16,16 +16,14 @@ const commands = [
     new SlashCommandBuilder()
         .setName('add')
         .setDescription('Add two numbers.')
-        .addNumberOption(option => {
+        .addNumberOption(option =>
             option.setName('first-number')
             .setRequired(true)
-            .setDescription('The first number you want to add!')
-        })
-        .addNumberOption(option => {
+            .setDescription('The first number you want to add!'))
+        .addNumberOption(option => 
             option.setName('second-number')
             .setRequired(true)
-            .setDescription('The second number you want to add!')
-        }),
+            .setDescription('The second number you want to add!')),
 
     new SlashCommandBuilder()
         .setName('aboutme')
