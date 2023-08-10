@@ -36,6 +36,11 @@ const commands = [
     new SlashCommandBuilder()
         .setName('game')
         .setDescription('Play a game! with yourself ofc you lonely fuck'),
+
+    new SlashCommandBuilder()
+        .setName('ping')
+        .setDescription('Bot Latency'),
+
 ].map(command => command.toJSON());
 
 const rest = new REST({ version: '10' }).setToken(token);
@@ -131,7 +136,7 @@ client.once('ready', async () => {
     client.user.setActivity({
         name: "with femboys",
     })
-    
+
     try{
         const channel = await client.channels.cache.get('1139202445281607780');
         if(!channel){
@@ -240,6 +245,14 @@ client.on('interactionCreate', async interaction => {
             });
 
         await interaction.reply({embeds:[embed]});
+    }
+
+    if (commandName === 'ping'){
+        const sentTimestamp = message.createdTimestamp;
+        const currentTimestamp = Date.now();
+        const ping = currentTimestamp - sentTimestamp;
+
+        message.reply(`Pong! Bot's ping is ${ping}ms.`);
     }
 
     if (commandName === 'game'){
