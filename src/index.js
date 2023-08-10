@@ -246,7 +246,7 @@ client.on('interactionCreate', async interaction => {
             for (let column = 0; column < 3; column++){
                 switch (gameState[row][column]){
                     case 0:
-                        messageContent += ':black_large_square';
+                        messageContent += ':black_large_square:';
                         break;
                     case 1:
                         messageContent += ':one:';
@@ -285,5 +285,9 @@ client.on('interactionCreate', async interaction => {
         message.react(':arrow_right:');
     }
 });
+
+client.user.setActivity({
+    name: "with femboys",
+})
 
 client.login(token); 
