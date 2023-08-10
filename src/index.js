@@ -1,9 +1,66 @@
 require('dotenv').config()
-const { Client, GatewayIntentBits, userMention, User , EmbedBuilder, Guild, ButtonStyle, ActionRowBuilder, ButtonBuilder} = require('discord.js')
+const { Client, GatewayIntentBits, Partials, userMention, User , EmbedBuilder, Guild, ButtonStyle, ActionRowBuilder, ButtonBuilder} = require('discord.js')
 const { REST } = require('@discordjs/rest');
 const { Routes } = require('discord-api-types/v9');
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const { NumberPuzzle } = require('./game');
+
+class NumberPuzzle {
+    constructor(player) {
+        this.player = player;
+        this.state = [[1, 2, 3],
+                      [4, 5, 6],
+                      [7, 8, 0]];
+        this.latest_message_id = ''
+
+        for (let i = 0; i < 1000; i++){
+            let direction = ['up', 'down', 'left', 'right'][Math.floor(Math.random() * 4)]
+            this.move(direction);
+        }
+    }
+
+    move(direction) {
+        for (let row = 0; row < 3; row++){
+            for (let column = 0; column < 3; column++){
+                if (this.state[row][column] == 0){
+                    switch (direction) {
+                        case 'up':
+                            if (row == 2){
+                                return;
+                            }
+                            this.state[row][column] = this.state[row + 1][column];
+                            this.state[row + 1][column] = 0;
+                            return;
+
+                        case 'down':
+                            if (row == 0){
+                                return;
+                            }
+                            this.state[row][column] = this.state[row - 1][column];
+                            this.state[row - 1][column] = 0;
+                            return;
+
+                        case 'left':
+                            if (column == 2){
+                                return;
+                            }
+                            this.state[row][column] = this.state[row][column + 1];
+                            this.state[row][column + 1] = 0;
+                            return;
+                            
+                        case 'right':
+                            if (column == 0){
+                                return;
+                            }
+                            this.state[row][column] = this.state[row][column - 1];
+                            this.state[row][column - 1] = 0;
+                            return;
+                    }
+                }
+            }
+        }
+    }
+}
+
 let games = [];
 
 const token = process.env.TOKEN;
@@ -60,7 +117,14 @@ const rest = new REST({ version: '10' }).setToken(token);
     }
 })();
 
-const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMembers, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent]});
+const client = new Client({ intents: [GatewayIntentBits.Guilds, 
+                                      GatewayIntentBits.GuildMembers, 
+                                      GatewayIntentBits.GuildMessages, 
+                                      GatewayIntentBits.MessageContent,
+                                      GatewayIntentBits.GuildMessageReactions],
+                            partials: [Partials.message,
+                                       Partials.channel,
+                                       Partials.reaction]});
 
 let roles = [
     {
@@ -212,7 +276,10 @@ client.on('interactionCreate', async (interaction) => {
 })
 
 client.on('interactionCreate', async interaction => {
-    if(!interaction.isChatInputCommand() && !interaction.isButton()) return;
+    if(!interaction.isChatInputCommand()){
+
+        return;
+    }
 
     const { commandName } = interaction;
 
@@ -258,13 +325,13 @@ client.on('interactionCreate', async interaction => {
     if (commandName === 'game'){
         const game = new NumberPuzzle(interaction.user);
         games.push(game);
-        let messageContent = ''
-        let gameState = game.getState();
+        let messageContent = `${interaction.user}'s game:`
+        let gameState = game.state;
         for (let row = 0; row < 3; row++){
             for (let column = 0; column < 3; column++){
                 switch (gameState[row][column]){
                     case 0:
-                        messageContent += ':black_large_square:';
+                        messageContent += ':black_large_square';
                         break;
                     case 1:
                         messageContent += ':one:';
@@ -291,19 +358,20 @@ client.on('interactionCreate', async interaction => {
                         messageContent += ':eight:';
                         break;
                 }
-                if (row != 2){
-                    messageContent += '\n';
-                }
             }
+            messageContent += '\n';
         }
         const message = await interaction.reply({ content: messageContent, fetchReply: true });
-        message.react(':arrow_up');
-        message.react(':arrow_down:');
-        message.react(':arrow_left:');
-        message.react(':arrow_right:');
+        message.react('⬆️');
+        message.react('⬇️');
+        message.react('⬅️');
+        message.react('➡️');
+        game.latest_message_id = message.id;
     }
 });
 
-
+client.user.setActivity({
+    name: "with femboys",
+})
 
 client.login(token); 
