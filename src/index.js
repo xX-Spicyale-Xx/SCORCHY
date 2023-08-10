@@ -3,7 +3,7 @@ const { Client, GatewayIntentBits, userMention, User , EmbedBuilder, Guild, Butt
 const { REST } = require('@discordjs/rest');
 const { Routes } = require('discord-api-types/v9');
 const { SlashCommandBuilder } = require('@discordjs/builders');
-import Game from './game'
+const {Game} = require('./game');
 let games = [];
 
 const token = process.env.TOKEN;
@@ -238,7 +238,7 @@ client.on('interactionCreate', async interaction => {
     }
 
     if (commandName === 'game'){
-        let game = new Game(interaction.user);
+        const game = new Game(interaction.user);
         games.push(game);
         let messageContent = ''
         let gameState = game.getState();
