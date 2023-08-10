@@ -8,6 +8,8 @@ const token = process.env.TOKEN;
 const clientId = process.env.CLIENT_ID;
 const guildId = process.env.GUILD_ID;
 
+const whitCheckPattern = new RegExp('\\bwhit\\b', 'i');
+
 const commands = [
     new SlashCommandBuilder()
         .setName('sayhello')
@@ -62,7 +64,7 @@ client.on('messageCreate', msg => {
         msg.reply('Yo Yo bro!');
     }
 
-    if(msg.content.includes('whit ') || msg.content.includes(' whit') || msg.content === 'whit'){
+    if(whitCheckPattern.test(msg.content)){
         msg.reply('https://youtu.be/wmKtZRouzJM');
     }
 });
