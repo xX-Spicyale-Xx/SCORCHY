@@ -315,8 +315,8 @@ client.on('interactionCreate', async interaction => {
     }
 
     if (commandName === 'ping'){
-        const sentTimestamp = message.createdTimestamp;
-        const currentTimestamp = Date.now();
+        currentTimestamp
+        const sentTimestamp = interaction.currentTimestamp;
         const ping = currentTimestamp - sentTimestamp;
 
         message.reply(`Pong! Bot's ping is ${ping}ms.`);
@@ -369,9 +369,5 @@ client.on('interactionCreate', async interaction => {
         game.latest_message_id = message.id;
     }
 });
-
-client.user.setActivity({
-    name: "with femboys",
-})
 
 client.login(token); 
