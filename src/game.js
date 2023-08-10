@@ -1,8 +1,8 @@
-export default class Game {
+class Game {
     constructor(player, message) {
-        this.#player = player;
-        this.#message = message;
-        this.#state = [[1, 2, 3],
+        this.player = player;
+        this.message = message;
+        this.state = [[1, 2, 3],
                       [4, 5, 6],
                       [7, 8, 0]]
 
