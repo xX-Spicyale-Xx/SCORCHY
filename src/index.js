@@ -5,7 +5,7 @@ const { SlashCommandBuilder } = require('@discordjs/builders');
 
 const token = process.env.TOKEN;
 const clientId = process.env.CLIENT_ID;
-const guildId = process.env.CLIENT_ID;
+const guildId = process.env.GUILD_ID;
 
 const commands = [
     new SlashCommandBuilder()
