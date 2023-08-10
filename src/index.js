@@ -3,6 +3,8 @@ const { Client, GatewayIntentBits, userMention, User , EmbedBuilder, Guild, Butt
 const { REST } = require('@discordjs/rest');
 const { Routes } = require('discord-api-types/v9');
 const { SlashCommandBuilder } = require('@discordjs/builders');
+import Game from './game'
+let games = [];
 
 const token = process.env.TOKEN;
 const clientId = process.env.CLIENT_ID;
@@ -33,7 +35,7 @@ const commands = [
 
     new SlashCommandBuilder()
         .setName('game')
-        .setDescription('Play a game, with yourself ofc you lonely fuck'),
+        .setDescription('Play a game! with yourself ofc you lonely fuck'),
 ].map(command => command.toJSON());
 
 const rest = new REST({ version: '10' }).setToken(token);
@@ -212,8 +214,51 @@ client.on('interactionCreate', async interaction => {
     }
 
     if (commandName === 'game'){
-        const message = await interaction.reply({ content: 'jk there are no games to be played here play yourself instead!!!', fetchReply: true });
-        message.react('💀');
+        let game = new Game(interaction.user);
+        games.push(game);
+        let messageContent = ''
+        let gameState = game.getState();
+        for (let row = 0; row < 3; row++){
+            for (let column = 0; column < 3; column++){
+                switch (gameState[row][column]){
+                    case 0:
+                        messageContent += ':black_large_square';
+                        break;
+                    case 1:
+                        messageContent += ':one:';
+                        break;
+                    case 2:
+                        messageContent += ':two:';
+                        break;
+                    case 3:
+                        messageContent += ':three:';
+                        break;
+                    case 4:
+                        messageContent += ':four:';
+                        break;
+                    case 5:
+                        messageContent += ':five:';
+                        break;
+                    case 6:
+                        messageContent += ':six:';
+                        break;
+                    case 7:
+                        messageContent += ':seven:';
+                        break;
+                    case 8:
+                        messageContent += ':eight:';
+                        break;
+                }
+                if (row != 2){
+                    messageContent += '\n';
+                }
+            }
+        }
+        const message = await interaction.reply({ content: messageContent, fetchReply: true });
+        message.react(':arrow_up');
+        message.react(':arrow_down:');
+        message.react(':arrow_left:');
+        message.react(':arrow_right:');
     }
 });
 
