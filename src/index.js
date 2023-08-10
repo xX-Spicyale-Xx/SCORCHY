@@ -184,7 +184,6 @@ client.on('interactionCreate', async (interaction) => {
 
         if (hasRole) {
             await interaction.member.roles.remove(roleToAdd);
-            console.log("line 1 works")
             await interaction.reply({ content: `The role: ${roleToAdd.name} has been removed.`, ephemeral: true });
             return;
         }
