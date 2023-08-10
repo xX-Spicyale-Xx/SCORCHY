@@ -1,4 +1,4 @@
-require('dotenv').config();
+/*require('dotenv').config();
 const { REST, Routes, ApplicationCommandOptionType} = require('discord.js');
 
 const commands = [
@@ -15,11 +15,11 @@ const commands = [
                 name: 'first-number',
                 description: 'The first number',
                 type: ApplicationCommandOptionType.Number,
-                /* remember that you can have choices here also that will appear upon doing slash commands
+                 remember that you can have choices here also that will appear upon doing slash commands
                  objects [
                     name: 'one',
                     value: 1
-                ] */
+                ] 
                 required: true,
             },
             {
@@ -61,4 +61,4 @@ const rest = new REST({ version: '10'}).setToken(process.env.TOKEN);
     } catch(error){
         console.log(`Yo slow down there bud - there was an error: ${error}`);
     }
-})();
+})(); */

@@ -1,4 +1,4 @@
-require('dotenv').config();
+/*require('dotenv').config();
 const { Client, IntentsBitField, userMention, User , EmbedBuilder, Guild} = require('discord.js')
 
 const client= new Client({
@@ -69,4 +69,4 @@ client.on('interactionCreate', (interaction) => {
     }
 })
 
-client.login(process.env.TOKEN);
+client.login(process.env.TOKEN);*/
