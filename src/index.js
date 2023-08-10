@@ -32,8 +32,8 @@ const commands = [
         .setDescription('Find out more about me!'),
 
     new SlashCommandBuilder()
-        .setName('whoasked')
-        .setDescription('You will finally figure who asked'),
+        .setName('game')
+        .setDescription('Play a game, with yourself ofc you lonely fuck'),
 ].map(command => command.toJSON());
 
 const rest = new REST({ version: '10' }).setToken(token);
@@ -150,8 +150,6 @@ client.once('ready', async () => {
             rows.push(row);
         }
 
-        console.log(rows[2].components.length)
-
         await channel.send({
             content: 'Select your colour role below!',
             components: [rows[0], rows[1], rows[2], rows[3]]
@@ -213,22 +211,9 @@ client.on('interactionCreate', async interaction => {
         await interaction.reply({embeds:[embed]});
     }
 
-    if (commandName === 'whoasked'){
-        await interaction.reply(`I’m a gay teenage boy that was groomed into believing I was a trans woman online. 
-        When I was around 13-14, I had a group of friends online on discord, usually ranging from 18-24, most of them 
-        being on the TQ+ side of the lgbtq+. At the time, I recently found out I was gay (bisexual technically because 
-        I thought I liked women when really I just like feminine things), which, at 13 thats insanely early to find 
-        out I was gay. I had a small interest in crossdressing and fashion, I liked femboys and seeing cute outfits, 
-        like many gay men. my online “friends” made me believe that this interest made me a transwoman, and encouraged
-        me to start using She/Her or They/Them pronouns. Me being a VERY young teenager, believed this, and came out 
-        as trans online. They encouraged me to shave my legs and post images of me in thigh highs and skirts in lewd 
-        poses and videos, KNOWING I WAS 13 AT THE TIME.`);
-    }
-
-    console.log(interaction);
-    //Button responses
-    if (interaction.id === '1138403959464271932'){
-        await interaction.channel.send("red");
+    if (commandName === 'game'){
+        const message = await interaction.reply({ content: 'jk there are no games to be played here play yourself instead!!!', fetchReply: true });
+        message.react('💀');
     }
 });
 
