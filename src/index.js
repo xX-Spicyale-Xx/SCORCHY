@@ -412,12 +412,12 @@ client.on('messageReactionAdd', async (reaction, user) => {
                     messageContent += '\n';
                 }
                 const channel = client.channels.cache.get('1138410099430408252');
+                reaction.message.channel.fetch(game.message_id).then(msg => msg.edit({ content: messageContent, fetchReply: true }));
                 const message = await channel.send({ content: messageContent, fetchReply: true });
                 message.react('⬆️');
                 message.react('⬇️');
                 message.react('⬅️');
                 message.react('➡️');
-                game.message_id = message.id;
                 return;
             }
         });
