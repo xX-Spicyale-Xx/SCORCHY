@@ -152,10 +152,10 @@ client.once('ready', async () => {
             rows.push(row);
         }
 
-        await channel.send({
+        /*await channel.send({
             content: '**Select your colour role below!**',
             components: [rows[0], rows[1], rows[2], rows[3]]
-        });
+        }); */
 
         process.exit;
     } catch(error){
