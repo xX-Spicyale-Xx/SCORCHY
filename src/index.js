@@ -361,25 +361,28 @@ client.on('interactionCreate', async interaction => {
 });
 
 client.on('messageReactionAdd', async (reaction, user) => {
-    if (user.bot) return; // Ignore reactions from bots
+    if (user.bot) return; 
 
     direction_emojis = ['⬆️', '⬇️', '⬅️', '➡️']
     games.forEach((game) =>{
         direction_emojis.forEach(async (emoji) =>{
             if (reaction.emoji.name === emoji && user === game.player){
-
                 switch(emoji){
                     case '⬆️':
                         game.move('up');
+                        //reaction.message.reactions.get('⬆️').remove(user);
                         break;
                     case '⬇️':
                         game.move('down');
+                        //reaction.message.reactions.get('⬇️').remove(user);
                         break;
                     case '⬅️':
                         game.move('left');
+                        //reaction.message.reactions.get('⬅️').remove(user);
                         break;
                     case '➡️':
                         game.move('right');
+                        //reaction.message.reactions.get('➡️').remove(user);
                         break;
                 }
 
@@ -419,13 +422,8 @@ client.on('messageReactionAdd', async (reaction, user) => {
                     }
                     messageContent += '\n';
                 }
-                const channel = client.channels.cache.get('1138410099430408252');
-                reaction.message.channel.fetch(game.message_id).then(msg => msg.edit({ content: messageContent, fetchReply: true }));
-                const message = await channel.send({ content: messageContent, fetchReply: true });
-                message.react('⬆️');
-                message.react('⬇️');
-                message.react('⬅️');
-                message.react('➡️');
+                const message = await reaction.message.channel.fetch(game.message_id);
+                message.edit({ content: messageContent, fetchReply: true });
                 return;
             }
         });
