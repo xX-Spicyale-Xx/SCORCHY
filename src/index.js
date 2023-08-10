@@ -127,6 +127,11 @@ let roles = [
 
 client.once('ready', async () => {
     console.log(`Logged in as ${client.user.tag}!`);
+
+    client.user.setActivity({
+        name: "with femboys",
+    })
+    
     try{
         const channel = await client.channels.cache.get('1139202445281607780');
         if(!channel){
@@ -286,8 +291,6 @@ client.on('interactionCreate', async interaction => {
     }
 });
 
-client.user.setActivity({
-    name: "with femboys",
-})
+
 
 client.login(token); 
