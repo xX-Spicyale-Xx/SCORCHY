@@ -3,6 +3,8 @@ const { Client, GatewayIntentBits, userMention, User , EmbedBuilder, Guild, Butt
 const { REST } = require('@discordjs/rest');
 const { Routes } = require('discord-api-types/v9');
 const { SlashCommandBuilder } = require('@discordjs/builders');
+import Game from './game'
+let games = [];
 
 const token = process.env.TOKEN;
 const clientId = process.env.CLIENT_ID;
@@ -32,8 +34,8 @@ const commands = [
         .setDescription('Find out more about me!'),
 
     new SlashCommandBuilder()
-        .setName('whoasked')
-        .setDescription('You will finally figure who asked'),
+        .setName('game')
+        .setDescription('Play a game! with yourself ofc you lonely fuck'),
 ].map(command => command.toJSON());
 
 const rest = new REST({ version: '10' }).setToken(token);
@@ -200,10 +202,11 @@ client.on('interactionCreate', async (interaction) => {
 })
 
 client.on('interactionCreate', async interaction => {
-    if(!interaction.isChatInputCommand()) return;
+    if(!interaction.isChatInputCommand() && !interaction.isButton()) return;
 
     const { commandName } = interaction;
 
+    // Command Reponses
     if (commandName === 'sayhello'){
         await interaction.reply(`heya ${interaction.user}!`);
     }
@@ -234,16 +237,52 @@ client.on('interactionCreate', async interaction => {
         await interaction.reply({embeds:[embed]});
     }
 
-    if (commandName === 'whoasked'){
-        await interaction.reply(`I’m a gay teenage boy that was groomed into believing I was a trans woman online. 
-        When I was around 13-14, I had a group of friends online on discord, usually ranging from 18-24, most of them 
-        being on the TQ+ side of the lgbtq+. At the time, I recently found out I was gay (bisexual technically because 
-        I thought I liked women when really I just like feminine things), which, at 13 thats insanely early to find 
-        out I was gay. I had a small interest in crossdressing and fashion, I liked femboys and seeing cute outfits, 
-        like many gay men. my online “friends” made me believe that this interest made me a transwoman, and encouraged
-        me to start using She/Her or They/Them pronouns. Me being a VERY young teenager, believed this, and came out 
-        as trans online. They encouraged me to shave my legs and post images of me in thigh highs and skirts in lewd 
-        poses and videos, KNOWING I WAS 13 AT THE TIME.`);
+    if (commandName === 'game'){
+        let game = new Game(interaction.user);
+        games.push(game);
+        let messageContent = ''
+        let gameState = game.getState();
+        for (let row = 0; row < 3; row++){
+            for (let column = 0; column < 3; column++){
+                switch (gameState[row][column]){
+                    case 0:
+                        messageContent += ':black_large_square';
+                        break;
+                    case 1:
+                        messageContent += ':one:';
+                        break;
+                    case 2:
+                        messageContent += ':two:';
+                        break;
+                    case 3:
+                        messageContent += ':three:';
+                        break;
+                    case 4:
+                        messageContent += ':four:';
+                        break;
+                    case 5:
+                        messageContent += ':five:';
+                        break;
+                    case 6:
+                        messageContent += ':six:';
+                        break;
+                    case 7:
+                        messageContent += ':seven:';
+                        break;
+                    case 8:
+                        messageContent += ':eight:';
+                        break;
+                }
+                if (row != 2){
+                    messageContent += '\n';
+                }
+            }
+        }
+        const message = await interaction.reply({ content: messageContent, fetchReply: true });
+        message.react(':arrow_up');
+        message.react(':arrow_down:');
+        message.react(':arrow_left:');
+        message.react(':arrow_right:');
     }
 });
 
