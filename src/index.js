@@ -307,13 +307,13 @@ client.on('interactionCreate', async interaction => {
     if (commandName === 'game'){
         const game = new NumberPuzzle(interaction.user);
         games.push(game);
-        let messageContent = `${interaction.user}'s game:`
+        let messageContent = `${interaction.user}'s game:\n`
         let gameState = game.state;
         for (let row = 0; row < 3; row++){
             for (let column = 0; column < 3; column++){
                 switch (gameState[row][column]){
                     case 0:
-                        messageContent += ':white_large_square';
+                        messageContent += ':white_large_square:';
                         break;
                     case 1:
                         messageContent += ':one:';
@@ -359,13 +359,29 @@ client.on('messageReactionAdd', async (reaction, user) => {
     games.forEach((game) =>{
         direction_emojis.forEach(async (emoji) =>{
             if (reaction.emoji.name === emoji && user === game.player){
-                let messageContent = `${user}'s game:`
+
+                switch(emoji){
+                    case '⬆️':
+                        game.move('up');
+                        break;
+                    case '⬇️':
+                        game.move('down');
+                        break;
+                    case '⬅️':
+                        game.move('left');
+                        break;
+                    case '➡️':
+                        game.move('right');
+                        break;
+                }
+
+                let messageContent = `${user}'s game:\n`
                 let gameState = game.state;
                 for (let row = 0; row < 3; row++){
                     for (let column = 0; column < 3; column++){
                         switch (gameState[row][column]){
                             case 0:
-                                messageContent += ':white_large_square';
+                                messageContent += ':white_large_square:';
                                 break;
                             case 1:
                                 messageContent += ':one:';
@@ -395,7 +411,7 @@ client.on('messageReactionAdd', async (reaction, user) => {
                     }
                     messageContent += '\n';
                 }
-                const channel = '1138410099430408252';
+                const channel = client.channels.cache.get('1138410099430408252');
                 const message = await channel.send({ content: messageContent, fetchReply: true });
                 message.react('⬆️');
                 message.react('⬇️');
