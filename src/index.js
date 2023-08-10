@@ -12,7 +12,7 @@ const commands = [
         .setName('sayhello')
         .setDescription('Replies back!'),
 
-    new SlashCommandBuilder()
+    /*new SlashCommandBuilder()
         .setName('add')
         .setDescription('Add two numbers.')
         .addNumberOption(option => {
@@ -24,7 +24,7 @@ const commands = [
             option.setName('second-number')
             .setRequired(true)
             .setDescription('The second number you want to add!')
-        }),
+        }),*/
 
     new SlashCommandBuilder()
         .setName('aboutme')
@@ -63,11 +63,11 @@ client.on('interactionCreate', async interaction => {
         await interaction.reply(`heya ${interaction.user}!`);
     }
 
-    if (commandName === 'add'){
+    /*if (commandName === 'add'){
         const num1 = interaction.options.get('first-number').value;
         const num2 = interaction.options.get('second-number').value;
         await interaction.reply(`The sum is ${num1 + num2}`);
-    }
+    }*/
 
     if (commandName === 'aboutme'){
         const embed = new EmbedBuilder()
