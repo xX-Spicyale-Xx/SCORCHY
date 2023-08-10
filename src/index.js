@@ -371,19 +371,15 @@ client.on('messageReactionAdd', async (reaction, user) => {
                 switch(emoji){
                     case '⬆️':
                         game.move('up');
-                        //reaction.message.reactions.get('⬆️').remove(user);
                         break;
                     case '⬇️':
                         game.move('down');
-                        //reaction.message.reactions.get('⬇️').remove(user);
                         break;
                     case '⬅️':
                         game.move('left');
-                        //reaction.message.reactions.get('⬅️').remove(user);
                         break;
                     case '➡️':
                         game.move('right');
-                        //reaction.message.reactions.get('➡️').remove(user);
                         break;
                 }
 
@@ -423,33 +419,20 @@ client.on('messageReactionAdd', async (reaction, user) => {
                     }
                     messageContent += '\n';
                 }
-                const message = await reaction.message.channel.fetch(game.message_id);
+                const message = await reaction.message.channel.messages.fetch(game.message_id);
                 message.edit({ content: messageContent, fetchReply: true });
+                const userReactions = message.reactions.cache.filter(reaction => reaction.users.cache.has(user.id));
+                try {
+                    for (const reaction of userReactions.values()) {
+                        await reaction.users.remove(user.id);
+                    }
+                } catch (error) {
+                    console.error('Failed to remove reactions.');
+                }
                 return;
             }
         });
     });
-
-    direction_emojis = ['⬆️', '⬇️', '⬅️', '➡️']
-    direction_emojis.forEach((emoji) =>{
-        if (reaction.emoji.name === emoji){
-            games.forEach(async (game) =>{
-
-            });
-        }
-        return;
-    });
-
-    // Check if the reaction is on the expected message
-    if (reaction.message.content === 'React to this message!') {
-        if (reaction.emoji.name === '👍') {
-            // Perform action for thumbs up reaction
-            await reaction.message.channel.send('You reacted with a thumbs up!');
-        } else if (reaction.emoji.name === '👎') {
-            // Perform action for thumbs down reaction
-            await reaction.message.channel.send('You reacted with a thumbs down!');
-        }
-    }
 });
 
 client.login(token); 
