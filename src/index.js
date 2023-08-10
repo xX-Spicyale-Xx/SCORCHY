@@ -216,12 +216,12 @@ client.on('interactionCreate', async interaction => {
         await interaction.reply(`I’m a gay teenage boy that was groomed into believing I was a trans woman online. 
         When I was around 13-14, I had a group of friends online on discord, usually ranging from 18-24, most of them 
         being on the TQ+ side of the lgbtq+. At the time, I recently found out I was gay (bisexual technically because 
-            I thought I liked women when really I just like feminine things), which, at 13 thats insanely early to find 
-            out I was gay. I had a small interest in crossdressing and fashion, I liked femboys and seeing cute outfits, 
-            like many gay men. my online “friends” made me believe that this interest made me a transwoman, and encouraged
-             me to start using She/Her or They/Them pronouns. Me being a VERY young teenager, believed this, and came out 
-             as trans online. They encouraged me to shave my legs and post images of me in thigh highs and skirts in lewd 
-             poses and videos, KNOWING I WAS 13 AT THE TIME.`);
+        I thought I liked women when really I just like feminine things), which, at 13 thats insanely early to find 
+        out I was gay. I had a small interest in crossdressing and fashion, I liked femboys and seeing cute outfits, 
+        like many gay men. my online “friends” made me believe that this interest made me a transwoman, and encouraged
+        me to start using She/Her or They/Them pronouns. Me being a VERY young teenager, believed this, and came out 
+        as trans online. They encouraged me to shave my legs and post images of me in thigh highs and skirts in lewd 
+        poses and videos, KNOWING I WAS 13 AT THE TIME.`);
     }
 });
 
