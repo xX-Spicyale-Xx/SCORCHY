@@ -59,6 +59,23 @@ class NumberPuzzle {
             }
         }
     }
+
+    gameFinished(){
+        let counter = 1;
+        for (let row = 0; row < 3; row++){
+            for (let column = 0; column < 3; column++){
+                let currentNum = this.state[row][column];
+                if (currentNum != counter){
+                    return false;
+                }
+
+                if (currentNum == 8){
+                    return true;
+                }
+                counter++;
+            }
+        }
+    }
 }
 
 let games = [];
@@ -384,6 +401,14 @@ client.on('messageReactionAdd', async (reaction, user) => {
                     case '➡️':
                         game.move('right');
                         break;
+                }
+
+                if (game.isFinished()){
+                    games.remove(game);
+                    delete game
+                    reaction.message.delete();
+                    reaction.message.channel.send(`GG! ${user} now think about the purpose of your meaningless life!! :smile:`);
+                    return;
                 }
 
                 let messageContent = `${user}'s game:\n`
