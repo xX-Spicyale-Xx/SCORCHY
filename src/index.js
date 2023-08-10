@@ -93,6 +93,11 @@ const commands = [
     new SlashCommandBuilder()
         .setName('game')
         .setDescription('Play a game! with yourself ofc you lonely fuck'),
+
+    new SlashCommandBuilder()
+        .setName('ping')
+        .setDescription('Bot Latency'),
+
 ].map(command => command.toJSON());
 
 const rest = new REST({ version: '10' }).setToken(token);
@@ -304,13 +309,11 @@ client.on('interactionCreate', async interaction => {
         await interaction.reply({embeds:[embed]});
     }
 
-    if (commandName === 'ping'){
+    if (commandName === 'ping') {
         console.log(Date.now())
-        const sentTimestamp = message.createdTimestamp;
-        const currentTimestamp = Date.now();
-        const ping = currentTimestamp - sentTimestamp;
+        const ping = Math.round(client.ws.ping);
 
-        message.reply(`Pong! Bot's ping is ${ping}ms.`);
+        await interaction.reply(`Pong! Bot's ping is ${ping}ms.`);
     }
 
     if (commandName === 'game'){
