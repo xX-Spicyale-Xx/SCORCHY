@@ -81,7 +81,7 @@ client.on('interactionCreate', async interaction => {
              })
             .addFields({
                 name: 'What is this bot?',
-                value: 'This is a bot made by <@342993018682605569> currently still in the works!',
+                value: 'This is a bot made by <@342993018682605569> and <@528540788326400001>  currently still in the works!',
                 inline: true,
             });
 
