@@ -331,7 +331,7 @@ client.on('interactionCreate', async interaction => {
             for (let column = 0; column < 3; column++){
                 switch (gameState[row][column]){
                     case 0:
-                        messageContent += ':black_large_square';
+                        messageContent += ':white_large_square';
                         break;
                     case 1:
                         messageContent += ':one:';
