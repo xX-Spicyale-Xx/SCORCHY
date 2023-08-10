@@ -53,6 +53,20 @@ client.once('ready', () => {
     console.log(`Logged in as ${client.user.tag}!`);
 });
 
+client.on('messageCreate', msg => {
+    if(msg.author.bot){
+        return
+    }
+
+    if(msg.content === 'hello'){
+        msg.reply('Yo Yo bro!');
+    }
+
+    if(msg.content.includes(' whit ') || message.content === 'whit'){
+        msg.reply('https://youtu.be/wmKtZRouzJM');
+    }
+})
+
 client.on('interactionCreate', async interaction => {
     if(!interaction.isChatInputCommand()) return;
 
