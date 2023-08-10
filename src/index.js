@@ -62,10 +62,10 @@ client.on('messageCreate', msg => {
         msg.reply('Yo Yo bro!');
     }
 
-    if(msg.content.includes(' whit ') || message.content === 'whit'){
+    if(msg.content.includes('whit ') || msg.content.includes(' whit') || msg.content === 'whit'){
         msg.reply('https://youtu.be/wmKtZRouzJM');
     }
-})
+});
 
 client.on('interactionCreate', async interaction => {
     if(!interaction.isChatInputCommand()) return;
