@@ -68,10 +68,6 @@ const roles = [
         label: 'Black',
     },
     {
-        id: '1138876647290961951',
-        label: 'Brown',
-    },
-    {
         id: '1138872875907027046',
         label: 'White',
     },
