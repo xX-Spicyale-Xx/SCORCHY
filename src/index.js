@@ -305,6 +305,7 @@ client.on('interactionCreate', async interaction => {
     }
 
     if (commandName === 'ping'){
+        console.log(Date.now())
         const sentTimestamp = message.createdTimestamp;
         const currentTimestamp = Date.now();
         const ping = currentTimestamp - sentTimestamp;
