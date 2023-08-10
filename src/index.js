@@ -313,7 +313,7 @@ client.on('interactionCreate', async interaction => {
             for (let column = 0; column < 3; column++){
                 switch (gameState[row][column]){
                     case 0:
-                        messageContent += ':white_large_square:';
+                        messageContent += ':black_large_square';
                         break;
                     case 1:
                         messageContent += ':one:';
@@ -350,78 +350,6 @@ client.on('interactionCreate', async interaction => {
         message.react('➡️');
         game.latest_message_id = message.id;
     }
-});
-
-client.on('messageReactionAdd', async (reaction, user) => {
-    if (user.bot) return;
-
-    direction_emojis =['⬆️', '⬇️', '⬅️', '➡️']
-    direction_emojis.forEach((emoji) => {
-        if (reaction.emoji.name === emoji){
-            games.forEach(async (game) =>{
-                if (game.player === user && reaction.message.id === game.latest_message_id){
-                    switch (reaction.emoji.name){
-                        case '⬆️':
-                            game.move('up');
-                            break;
-                        case '⬇️':
-                            game.move('down');
-                            break;
-                        case '⬅️':
-                            game.move('left');
-                            break;
-                        case '➡️':
-                            game.move('right');
-                            break;
-                    }
-    
-                    let messageContent = `${game.player}'s game: `
-                    let gameState = game.state;
-                    for (let row = 0; row < 3; row++){
-                        for (let column = 0; column < 3; column++){
-                            switch (gameState[row][column]){
-                                case 0:
-                                    messageContent += ':white_large_square:';
-                                    break;
-                                case 1:
-                                    messageContent += ':one:';
-                                    break;
-                                case 2:
-                                    messageContent += ':two:';
-                                    break;
-                                case 3:
-                                    messageContent += ':three:';
-                                    break;
-                                case 4:
-                                    messageContent += ':four:';
-                                    break;
-                                case 5:
-                                    messageContent += ':five:';
-                                    break;
-                                case 6:
-                                    messageContent += ':six:';
-                                    break;
-                                case 7:
-                                    messageContent += ':seven:';
-                                    break;
-                                case 8:
-                                    messageContent += ':eight:';
-                                    break;
-                            }
-                        }
-                        messageContent += '\n';
-                    }
-                    const channel = await client.channels.cache.get('1138410099430408252');
-                    const message = await channel.send({ content: messageContent, fetchReply: true });
-                    message.react('⬆️');
-                    message.react('⬇️');
-                    message.react('⬅️');
-                    message.react('➡️');
-                    game.latest_message_id = message.id;
-                }
-            });
-        }
-    });
 });
 
 client.login(token); 
