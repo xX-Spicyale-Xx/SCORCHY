@@ -1,5 +1,5 @@
 require('dotenv').config()
-const { Client, GatewayIntentBits, EmbedBuilder } = require('discord.js');
+const { Client, GatewayIntentBits, userMention, User , EmbedBuilder, Guild, ButtonStyle, ActionRowBuilder, ButtonBuilder} = require('discord.js')
 const { REST } = require('@discordjs/rest');
 const { Routes } = require('discord-api-types/v9');
 const { SlashCommandBuilder } = require('@discordjs/builders');
@@ -55,8 +55,112 @@ const rest = new REST({ version: '10' }).setToken(token);
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMembers, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent]});
 
-client.once('ready', () => {
+let roles = [
+    {
+        id: '1138872956940984351',
+        label: 'Red'
+    },
+    {
+        id: '1138872522264281229',
+        label: 'Orange'
+    },
+    {
+        id: '1138873261350977537',
+        label: 'Yellow'
+    },
+    {
+        id: '1138876096146845717',
+        label: 'Amber'
+    },
+    {
+        id: '1138872460549312552',
+        label: 'Green',
+    },
+    {
+        id: '1138872695946223637',
+        label: 'Lime',
+    },
+    {
+        id: '1138873457833168966',
+        label: 'Sky Blue',
+    },
+    {
+        id: '1138872279212761218',
+        label: 'Blue',
+    },
+    {
+        id: '1138874500243542156',
+        label: 'Royal Blue',
+    },
+    {
+        id: '1138873058891927744',
+        label: 'Light Purple',
+    },
+    {
+        id: '1138873579417653368',
+        label: 'Purple',
+    },
+    {
+        id: '1138872605844197527',
+        label: 'Pink',
+    },
+    {
+        id: '1138874999013384242',
+        label: 'Hot Pink',
+    },
+    {
+        id: '1138872821154578565',
+        label: 'Black',
+    },
+    {
+        id: '1138876647290961951',
+        label: 'Brown',
+    },
+    {
+        id: '1138872875907027046',
+        label: 'White',
+    },
+
+];
+
+client.once('ready', async () => {
     console.log(`Logged in as ${client.user.tag}!`);
+    try{
+        const channel = await client.channels.cache.get('1138410099430408252');
+        if(!channel){
+            console.log("Channel not found!")
+            return;
+        } 
+        
+        let rows = [];
+        for (let i = 0; i < 4; i++){
+            const row = new ActionRowBuilder();
+            let currentRolesRow = [];
+            while (currentRolesRow.length < 5){
+                if (roles.length == 0){
+                    break;
+                }
+                currentRolesRow.push(roles.shift(0));
+            }
+
+            currentRolesRow.forEach((role) => {
+            row.addComponents(
+                new ButtonBuilder().setCustomId(role.id).setLabel(role.label).setStyle(ButtonStyle.Primary)
+            )});
+            rows.push(row);
+        }
+
+        console.log(rows[2].components.length)
+
+        await channel.send({
+            content: 'Select your colour role below!',
+            components: [rows[0], rows[1], rows[2], rows[3]]
+        });
+
+        process.exit;
+    } catch(error){
+        console.log(`Yo slow down there bud - there was an error: ${error}`);
+    }
 });
 
 client.on('messageCreate', msg => {
