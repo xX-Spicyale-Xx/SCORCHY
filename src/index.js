@@ -316,8 +316,8 @@ client.on('messageCreate', msg => {
         return;
     }
 
-    if (Math.floor(math.random * 20) === 0){
-        if (Math.floor(math.random * 2) === 0){
+    if (Math.floor(Math.random() * 20) === 0){
+        if (Math.floor(Math.random() * 2) === 0){
             msg.reply('Dude my balls are itching');
         }
         else{
