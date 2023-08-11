@@ -84,6 +84,7 @@ let games = [];
 const token = process.env.TOKEN;
 const clientId = process.env.CLIENT_ID;
 const guildId = process.env.GUILD_ID;
+const mongoID = process.env.MONGODB_URI;
 
 const whitCheckPattern = new RegExp('\\bwhit\\b', 'i');
 
@@ -138,7 +139,7 @@ const rest = new REST({ version: '10' }).setToken(token);
 
 (async () => {
     try {
-        await mongoose.connect(process.env.MONGODB_URI);
+        await mongoose.connect(mongoID);
         console.log('Connected to DB!')
         console.log('Started refreshing application (/) commands.');
 
@@ -161,6 +162,10 @@ const client = new Client({ intents: [GatewayIntentBits.Guilds,
                             partials: [Partials.message,
                                        Partials.channel,
                                        Partials.reaction]});
+
+module.exports = (level) => {
+    
+}
 
 let roles = [
     {
