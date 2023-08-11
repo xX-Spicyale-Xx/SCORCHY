@@ -80,28 +80,6 @@ class NumberPuzzle {
     }
 }
 
-class User{
-    constructor(user){
-        this.user;
-        this.xp = 0;
-        this.level = 1;
-        this.xp_required_for_new_level = (this.level - 1) ^ 2  + (this.level - 1) * 10 + 100 - ((this.level - 1) ^ 2  + (this.level - 1) * 10) % 5;
-    }
-
-    addXP(xp){
-        this.xp += xp
-        this.checkLevelUp()
-    }
-
-    checkLevelUp(){
-        if (this.xp >= this.xp_required_for_new_level){
-            this.level++;
-            this.xp -= this.xp_required_for_new_level;
-            this.xp_required_for_new_level = (this.level - 1) ^ 2  + (this.level - 1) * 10 + 100 - ((this.level - 1) ^ 2  + (this.level - 1) * 10) % 5;
-        }
-    }
-}
-
 let games = [];
 
 const token = process.env.TOKEN;
@@ -335,7 +313,16 @@ client.once('ready', async () => {
 
 client.on('messageCreate', msg => {
     if(msg.author.bot){
-        return
+        return;
+    }
+
+    if (Math.floor(math.random * 20) === 0){
+        if (Math.floor(math.random * 2) === 0){
+            msg.reply('Dude my balls are itching');
+        }
+        else{
+            msg.reply('Guys, can you help me scartch my balls');
+        }
     }
 
     if(msg.content === 'hello'){
