@@ -80,6 +80,28 @@ class NumberPuzzle {
     }
 }
 
+class User{
+    constructor(user){
+        this.user;
+        this.xp = 0;
+        this.level = 1;
+        this.xp_required_for_new_level = (this.level - 1) ^ 2  + (this.level - 1) * 10 + 100 - ((this.level - 1) ^ 2  + (this.level - 1) * 10) % 5;
+    }
+
+    addXP(xp){
+        this.xp += xp
+        this.checkLevelUp()
+    }
+
+    checkLevelUp(){
+        if (this.xp >= this.xp_required_for_new_level){
+            this.level++;
+            this.xp -= this.xp_required_for_new_level;
+            this.xp_required_for_new_level = (this.level - 1) ^ 2  + (this.level - 1) * 10 + 100 - ((this.level - 1) ^ 2  + (this.level - 1) * 10) % 5;
+        }
+    }
+}
+
 let games = [];
 
 const token = process.env.TOKEN;
