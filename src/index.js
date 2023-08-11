@@ -334,6 +334,12 @@ client.on('interactionCreate', async interaction => {
     }
 
     if (commandName === 'game'){
+        games.forEach((activeGame) =>{
+            if (activeGame.player === interaction.user){
+                games.splice(games.indexOf(activeGame), 1);
+            }
+        });
+
         const game = new NumberPuzzle(interaction.user);
         games.push(game);
         let messageContent = `${interaction.user}'s game:\n`
