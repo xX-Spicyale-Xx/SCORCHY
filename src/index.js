@@ -166,11 +166,6 @@ const client = new Client({ intents: [GatewayIntentBits.Guilds,
 
 module.exports = (level) => 100 * level || 1;
 
-function getXP(min, max){
-    min = 0
-    max = 0
-}
-
 /**
  * @param {Client} client 
  * @param {message} message 
@@ -179,8 +174,10 @@ function getXP(min, max){
 module.exports = (client, message) => {
     
     if (!message.inGuild() || message.author.bot) return;
-        
-    const XPGive = getRandomXP(5, 15);
+    
+    let char = msg.content.length
+    xp = Math.ceil(Math.log(5(char)+10)*6)
+
 }
 
 const levelSchema = new Schema({
