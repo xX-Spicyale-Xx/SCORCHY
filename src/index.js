@@ -333,7 +333,18 @@ client.once('ready', async () => {
 
 client.on('messageCreate', msg => {
     if(msg.author.bot){
-        return
+        return;
+    }
+
+    
+
+    if (Math.floor(Math.random() * 200) === 0){
+        if (Math.floor(Math.random() * 2) === 0){
+            msg.reply('Dude my balls are itching');
+        }
+        else{
+            msg.reply('Guys, can you help me scartch my balls');
+        }
     }
 
     if(msg.content === 'hello'){
