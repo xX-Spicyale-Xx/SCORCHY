@@ -1,5 +1,5 @@
 require('dotenv').config()
-const mongoose = require('mongoose')
+const { mongoose, Schema, model} = require('mongoose')
 const { Client, GatewayIntentBits, Partials, userMention, User , EmbedBuilder, Guild, ButtonStyle, ActionRowBuilder, ButtonBuilder, ActivityType, ApplicationCommandOptionType, ApplicationCommandType} = require('discord.js')
 const { REST } = require('@discordjs/rest');
 const { Routes } = require('discord-api-types/v9');
@@ -123,14 +123,14 @@ const commands = [
     new SlashCommandBuilder()
         .setName('timeout')
         .setDescription('Talktalk go byebye')
-        .addNumberOption(option =>
+        .addStringOption(option =>
             option.setName('user-target')
             .setRequired(true)
             .setDescription('Select a user to time out'))
         .addNumberOption(option => 
             option.setName('duration')
             .setRequired(true)
-            .setDescription('How long do you want the timeout to last'))*/
+            .setDescription('How long do you want the timeout to last')) */
 
         
 
@@ -164,9 +164,43 @@ const client = new Client({ intents: [GatewayIntentBits.Guilds,
                                        Partials.channel,
                                        Partials.reaction]});
 
-module.exports = (level) => {
-    
+module.exports = (level) => 100 * level || 1;
+
+function getXP(min, max){
+    min = 0
+    max = 0
 }
+
+/**
+ * @param {Client} client 
+ * @param {message} message 
+ */
+
+module.exports = (client, message) => {
+    
+    if (!message.inGuild() || message.author.bot) return;
+        
+    const XPGive = getRandomXP(5, 15);
+}
+
+const levelSchema = new Schema({
+    userId: {
+        type: String,
+        required: true, 
+    },
+    guildId: {
+        type: String,
+        required: true,
+    },
+    xp: {
+        type: Number,
+        default: 0,
+    },
+    level: {
+        type: Number,
+        default: 0,
+    },
+});
 
 let roles = [
     {
