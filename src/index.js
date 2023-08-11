@@ -403,11 +403,12 @@ client.on('messageReactionAdd', async (reaction, user) => {
                         break;
                 }
 
-                if (game.isFinished()){
-                    games.remove(game);
-                    delete game
-                    reaction.message.delete();
-                    reaction.message.channel.send(`GG! ${user} now think about the purpose of your meaningless life!! :smile:`);
+                if (game.gameFinished()){
+                    games.splice(games.indexOf(game), 1);
+                    delete game;
+                    const message = await reaction.message.channel.messages.fetch(game.message_id);
+                    message.edit(`GG! ${user} now think about the purpose of your meaningless life!! :smile:`);
+                    message.reactions.removeAll();
                     return;
                 }
 
