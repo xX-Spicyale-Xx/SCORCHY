@@ -88,6 +88,7 @@ const guildId = process.env.GUILD_ID;
 const mongoID = process.env.MONGODB_URI;
 
 const whitCheckPattern = new RegExp('\\bwhit\\b', 'i');
+const nWordCheckPattern = new RegExp('\\b(nigga|nigger)\\b', 'i');
 
 const commands = [
     new SlashCommandBuilder()
@@ -316,9 +317,7 @@ client.on('messageCreate', msg => {
         return;
     }
 
-    
-
-    if (Math.floor(Math.random() * 200) === 0){
+    if (Math.floor(Math.random() * 500) === 0){
         if (Math.floor(Math.random() * 2) === 0){
             msg.reply('Dude my balls are itching');
         }
@@ -333,6 +332,10 @@ client.on('messageCreate', msg => {
 
     if(whitCheckPattern.test(msg.content)){
         msg.reply('https://youtu.be/wmKtZRouzJM');
+    }
+
+    if(nWordCheckPattern.test(msg.content)){
+        msg.reply('https://tenor.com/view/anime-toraburu-popsicle-momo-belia-deviluke-gif-14049232');
     }
 });
 
