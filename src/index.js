@@ -11,6 +11,7 @@ class NumberPuzzle {
         this.state = [[1, 2, 3],
                       [4, 5, 6],
                       [7, 8, 0]];
+        this.start_date = new Date();
         this.message_id = ''
 
         for (let i = 0; i < 1000; i++){
@@ -444,10 +445,15 @@ client.on('messageReactionAdd', async (reaction, user) => {
                 }
 
                 if (game.gameFinished()){
+                    let endDate = new Date();
+                    let ElaspedTime = endDate - game.start_date;
+
+                    let seconds = ElaspedTime / 1000;
+
                     games.splice(games.indexOf(game), 1);
                     delete game;
                     const message = await reaction.message.channel.messages.fetch(game.message_id);
-                    message.edit(`GG! ${user} now think about the purpose of your meaningless life!! :smile:`);
+                    message.edit(`GG! ${user} , wasting ${seconds} seconds of your life on this dumb game, now think about the purpose of your meaningless life!! :smile:`);
                     message.reactions.removeAll();
                     return;
                 }
