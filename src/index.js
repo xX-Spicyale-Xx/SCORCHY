@@ -80,28 +80,6 @@ class NumberPuzzle {
     }
 }
 
-class User{
-    constructor(user){
-        this.user;
-        this.xp = 0;
-        this.level = 1;
-        this.xp_required_for_new_level = (this.level - 1) ^ 2  + (this.level - 1) * 10 + 100 - ((this.level - 1) ^ 2  + (this.level - 1) * 10) % 5;
-    }
-
-    addXP(xp){
-        this.xp += xp
-        this.checkLevelUp()
-    }
-
-    checkLevelUp(){
-        if (this.xp >= this.xp_required_for_new_level){
-            this.level++;
-            this.xp -= this.xp_required_for_new_level;
-            this.xp_required_for_new_level = (this.level - 1) ^ 2  + (this.level - 1) * 10 + 100 - ((this.level - 1) ^ 2  + (this.level - 1) * 10) % 5;
-        }
-    }
-}
-
 let games = [];
 
 const token = process.env.TOKEN;
@@ -193,15 +171,6 @@ module.exports = (level) => 100 * level || 1;
  * @param {message} message 
  */
 
-module.exports = (client, message) => {
-    
-    if (!message.inGuild() || message.author.bot) return;
-    
-    let char = msg.content.length
-    xp = Math.ceil(Math.log(5(char)+10)*6)
-
-}
-
 const levelSchema = new Schema({
     userId: {
         type: String,
@@ -220,6 +189,35 @@ const levelSchema = new Schema({
         default: 0,
     },
 });
+module.exports = model('Level', levelSchema)
+
+module.exports = async (client, message) => {
+    
+    if (!message.inGuild() || message.author.bot) return;
+    
+    let char = msg.content.length
+    xp = Math.ceil(Math.log(5(char)+10)*6)
+
+    const query = {
+        userId: msg.author.id,
+        guildId: msg.guild.id,
+    };
+
+    try{
+        const Level = await level.findOne(query);
+
+        if(Level){
+            level.xp =+ xpToGive;
+
+            if (level.xp > calculateLevelXp(level.level));
+        }
+    }catch(error) {
+        console.log(`Yo slow down there bud - there was an error: ${error}`);
+    }
+
+}
+
+
 
 let roles = [
     {
