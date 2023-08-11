@@ -60,6 +60,23 @@ class NumberPuzzle {
             }
         }
     }
+
+    gameFinished(){
+        let counter = 1;
+        for (let row = 0; row < 3; row++){
+            for (let column = 0; column < 3; column++){
+                let currentNum = this.state[row][column];
+                if (currentNum != counter){
+                    return false;
+                }
+
+                if (currentNum == 8){
+                    return true;
+                }
+                counter++;
+            }
+        }
+    }
 }
 
 let games = [];
@@ -346,6 +363,12 @@ client.on('interactionCreate', async interaction => {
     }
 
     if (commandName === 'game'){
+        games.forEach((activeGame) =>{
+            if (activeGame.player === interaction.user){
+                games.splice(games.indexOf(activeGame), 1);
+            }
+        });
+
         const game = new NumberPuzzle(interaction.user);
         games.push(game);
         let messageContent = `${interaction.user}'s game:\n`
@@ -413,6 +436,15 @@ client.on('messageReactionAdd', async (reaction, user) => {
                     case '➡️':
                         game.move('right');
                         break;
+                }
+
+                if (game.gameFinished()){
+                    games.splice(games.indexOf(game), 1);
+                    delete game;
+                    const message = await reaction.message.channel.messages.fetch(game.message_id);
+                    message.edit(`GG! ${user} now think about the purpose of your meaningless life!! :smile:`);
+                    message.reactions.removeAll();
+                    return;
                 }
 
                 let messageContent = `${user}'s game:\n`
