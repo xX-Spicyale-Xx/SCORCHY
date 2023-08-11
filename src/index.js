@@ -1,5 +1,6 @@
 require('dotenv').config()
-const { Client, GatewayIntentBits, Partials, userMention, User , EmbedBuilder, Guild, ButtonStyle, ActionRowBuilder, ButtonBuilder} = require('discord.js')
+const mongoose = require('mongoose')
+const { Client, GatewayIntentBits, Partials, userMention, User , EmbedBuilder, Guild, ButtonStyle, ActionRowBuilder, ButtonBuilder, ActivityType, ApplicationCommandOptionType, ApplicationCommandType} = require('discord.js')
 const { REST } = require('@discordjs/rest');
 const { Routes } = require('discord-api-types/v9');
 const { SlashCommandBuilder } = require('@discordjs/builders');
@@ -98,12 +99,30 @@ const commands = [
         .setName('ping')
         .setDescription('Bot Latency'),
 
+    /* how are you supposed to set types in this format????
+    
+    new SlashCommandBuilder()
+        .setName('timeout')
+        .setDescription('Talktalk go byebye')
+        .addNumberOption(option =>
+            option.setName('user-target')
+            .setRequired(true)
+            .setDescription('Select a user to time out'))
+        .addNumberOption(option => 
+            option.setName('duration')
+            .setRequired(true)
+            .setDescription('How long do you want the timeout to last'))*/
+
+        
+
 ].map(command => command.toJSON());
 
 const rest = new REST({ version: '10' }).setToken(token);
 
 (async () => {
     try {
+        await mongoose.connect(process.env.MONGODB_URI);
+        console.log('Connected to DB!')
         console.log('Started refreshing application (/) commands.');
 
         await rest.put(
@@ -196,6 +215,12 @@ let roles = [
 
 client.once('ready', async () => {
     console.log(`Logged in as ${client.user.tag}!`);
+
+    client.user.setActivity({
+        name: 'this server...',
+        type: ActivityType.Watching
+    })
+
     try{
         const channel = await client.channels.cache.get('1139202445281607780');
         if(!channel){
@@ -314,6 +339,10 @@ client.on('interactionCreate', async interaction => {
         const ping = Math.round(client.ws.ping);
 
         await interaction.reply(`Pong! Bot's ping is ${ping}ms.`);
+    }
+
+    if (commandName === 'timeout') {
+        console.log()
     }
 
     if (commandName === 'game'){
