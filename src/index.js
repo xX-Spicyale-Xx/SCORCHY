@@ -417,10 +417,6 @@ client.on('interactionCreate', async interaction => {
         await interaction.reply(`Pong! Bot's ping is ${ping}ms.`);
     }
 
-    if (commandName === 'timeout') {
-        console.log()
-    }
-
     if (commandName === 'game'){
         games.forEach((activeGame) =>{
             if (activeGame.player === interaction.user){
