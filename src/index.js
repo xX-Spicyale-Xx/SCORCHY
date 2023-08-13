@@ -171,26 +171,6 @@ module.exports = (level) => 100 * level || 1;
  * @param {message} message 
  */
 
-const levelSchema = new Schema({
-    userId: {
-        type: String,
-        required: true, 
-    },
-    guildId: {
-        type: String,
-        required: true,
-    },
-    xp: {
-        type: Number,
-        default: 0,
-    },
-    level: {
-        type: Number,
-        default: 0,
-    },
-});
-module.exports = model('Level', levelSchema)
-
 module.exports = async (client, message) => {
     
     if (!message.inGuild() || message.author.bot) return;
