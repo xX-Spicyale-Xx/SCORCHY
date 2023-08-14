@@ -91,6 +91,7 @@ const clientId = process.env.CLIENT_ID;
 const guildId = process.env.GUILD_ID;
 
 const whitCheckPattern = new RegExp('\\bwhit\\b', 'i');
+const nWordCheckPattern = new RegExp('\\b(nigga|nigger)\\b', 'i');
 
 const commands = [
     new SlashCommandBuilder()
@@ -387,6 +388,10 @@ client.on('messageCreate', msg => {
 
     if(whitCheckPattern.test(msg.content)){
         msg.reply('https://youtu.be/wmKtZRouzJM');
+    }
+
+    if(nWordCheckPattern.test(msg.content)){
+        msg.reply('https://tenor.com/view/anime-toraburu-popsicle-momo-belia-deviluke-gif-14049232');
     }
 });
 
