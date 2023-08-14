@@ -1,9 +1,13 @@
 require('dotenv').config()
-const { mongoose, Schema, model} = require('mongoose')
-const { Client, GatewayIntentBits, Partials, userMention, User , EmbedBuilder, Guild, ButtonStyle, ActionRowBuilder, ButtonBuilder, ActivityType, ApplicationCommandOptionType, ApplicationCommandType} = require('discord.js')
+const { Client, GatewayIntentBits, Partials, userMention, User , EmbedBuilder, Guild, ButtonStyle, ActionRowBuilder, ButtonBuilder, ActivityType, ApplicationCommandOptionType, ApplicationCommandType, Message }= require('discord.js')
 const { REST } = require('@discordjs/rest');
 const { Routes } = require('discord-api-types/v9');
 const { SlashCommandBuilder } = require('@discordjs/builders');
+
+const sqlite3 = require('sqlite3').verbose();
+
+// Create or connect to a database file
+const db = new sqlite3.Database('scorchy.db');
 
 class NumberPuzzle {
     constructor(player) {
@@ -85,7 +89,6 @@ let games = [];
 const token = process.env.TOKEN;
 const clientId = process.env.CLIENT_ID;
 const guildId = process.env.GUILD_ID;
-const mongoID = process.env.MONGODB_URI;
 
 const whitCheckPattern = new RegExp('\\bwhit\\b', 'i');
 
@@ -118,6 +121,10 @@ const commands = [
         .setName('ping')
         .setDescription('Bot Latency'),
 
+    new SlashCommandBuilder()
+        .setName('rank')
+        .setDescription('Check your rank')
+
     /* how are you supposed to set types in this format????
     
     new SlashCommandBuilder()
@@ -140,8 +147,8 @@ const rest = new REST({ version: '10' }).setToken(token);
 
 (async () => {
     try {
-        await mongoose.connect(mongoID);
-        console.log('Connected to DB!')
+
+        
         console.log('Started refreshing application (/) commands.');
 
         await rest.put(
@@ -168,29 +175,23 @@ module.exports = (level) => 100 * level || 1;
 
 /**
  * @param {Client} client 
- * @param {message} message 
+ * @param {Message} message 
  */
 
 module.exports = async (client, message) => {
     
     if (!message.inGuild() || message.author.bot) return;
     
-    let char = msg.content.length
-    xp = Math.ceil(Math.log(5(char)+10)*6)
+    let char = message.content.length
+    //let xp = Math.ceil(Math.log(5(char)+10)*6)
 
     const query = {
-        userId: msg.author.id,
-        guildId: msg.guild.id,
+        userId: message.author.id,
+        guildId: message.guild.id,
     };
 
     try{
-        const Level = await level.findOne(query);
 
-        if(Level){
-            level.xp =+ xpToGive;
-
-            if (level.xp > calculateLevelXp(level.level));
-        }
     }catch(error) {
         console.log(`Yo slow down there bud - there was an error: ${error}`);
     }
@@ -269,6 +270,17 @@ let roles = [
 
 client.once('ready', async () => {
     console.log(`Logged in as ${client.user.tag}!`);
+    db.serialize(() => {
+        // Create a table
+
+        db.run('DROP TABLE users');
+
+        db.run('CREATE TABLE IF NOT EXISTS users(username TEXT PRIMARY KEY, xp INT, level INT)');
+    });
+    
+     
+
+    console.log('Connected to DB!')
 
     client.user.setActivity({
         name: 'this server...',
@@ -316,7 +328,49 @@ client.on('messageCreate', msg => {
         return;
     }
 
+        /*
+        const insertStatement = db.prepare('INSERT INTO users VALUES (?, ?)');
+        insertStatement.run(1, 'John Doe');
+        insertStatement.run(2, 'Jane Smith');
+        insertStatement.finalize();
     
+        // Query data from the table
+        db.each('SELECT * FROM users', (err, row) => {
+            if (err) {
+                console.error(err.message);
+            } else {
+                console.log(row);
+            }
+        });*/  
+        
+    db.serialize(() => {
+        let userRegistered = false;
+        let username = msg.author.username;
+        db.each(`SELECT username FROM users WHERE username = ${username}`), (name) =>{
+            userRegistered = true;
+        }
+
+        let char = msg.content.length;
+        const xpIncrease = Math.ceil(Math.log(5 * (char)+10)*6);
+        if (!userRegistered){
+            db.run(`INSERT INTO users(${username}, ${xpIncrease}, ${1})`);
+        }
+        else{
+            let xp = db.run(`SELECT xp FROM users WHERE username = ${username}`);
+            let level = db.run(`SELECT level FROM users WHERE username = ${username}`);
+            
+            const xpRequiredForNextLevel = (level - 1)^2 + 10 * (level - 1) + 100 - ((level - 1)^2 + 10 * (level - 1) + 100) % 5;
+
+            if (xp + xpIncrease > xpRequiredForNextLevel){
+                db.run(`UPDATE users SET xp = ${xp + xpIncrease - xpRequiredForNextLevel} SET level = ${level + 1} WHERE username = ${username}`);
+            }
+            else{
+                db.run(`UPDATE users SET xp = ${xp+ xpIncrease} WHERE username = ${username}`);
+            }
+        }
+        
+    });
+     
 
     if (Math.floor(Math.random() * 200) === 0){
         if (Math.floor(Math.random() * 2) === 0){
@@ -368,6 +422,49 @@ client.on('interactionCreate', async interaction => {
 
     const { commandName } = interaction;
 
+    if (commandName != 'rank'){
+        db.serialize(() => {
+            let userRegistered = false;
+            let username = interaction.user.username;
+            db.each(`SELECT username FROM users WHERE username = ${username}`), (name) =>{
+                userRegistered = true;
+            }
+    
+            const xpIncrease = 20;
+            if (!userRegistered){
+                db.run(`INSERT INTO users(${username}, ${xpIncrease}, ${1})`);
+            }
+            else{
+                let xp = db.run(`SELECT xp FROM users WHERE username = ${username}`);
+                let level = db.run(`SELECT level FROM users WHERE username = ${username}`);
+                
+                const xpRequiredForNextLevel = (level - 1)^2 + 10 * (level - 1) + 100 - ((level - 1)^2 + 10 * (level - 1) + 100) % 5;
+    
+                if (xp + xpIncrease > xpRequiredForNextLevel){
+                    db.run(`UPDATE users SET xp = ${xp + xpIncrease - xpRequiredForNextLevel} SET level = ${level + 1} WHERE username = ${username}`);
+                }
+                else{
+                    db.run(`UPDATE users SET xp = ${xp+ xpIncrease} WHERE username = ${username}`);
+                }
+            }
+            
+        });
+         
+    }
+    else{
+        db.serialize(() => {
+            let userRegistered = false;
+            let username = interaction.user.username;
+            db.each(`SELECT username FROM users WHERE username = ${username}`), (name) =>{
+                userRegistered = true;
+            }
+            if (!userRegistered){
+                db.run(`INSERT INTO users(${username}, ${0}, ${1})`);
+            }
+        });
+         
+    }
+
     // Command Reponses
     if (commandName === 'sayhello'){
         await interaction.reply(`heya ${interaction.user}!`);
@@ -404,6 +501,17 @@ client.on('interactionCreate', async interaction => {
         const ping = Math.round(client.ws.ping);
 
         await interaction.reply(`Pong! Bot's ping is ${ping}ms.`);
+    }
+
+    if (commandName === 'rank'){
+        db.serialize( async () =>{
+            let xp = db.run(`SELECT xp FROM users WHERE username = ${username}`);
+            let level = db.run(`SELECT level FROM users WHERE username = ${username}`);
+        
+            const xpRequiredForNextLevel = (level - 1)^2 + 10 * (level - 1) + 100 - ((level - 1)^2 + 10 * (level - 1) + 100) % 5;
+            await interaction.reply(`${interaction.user.username}: ${xp}/${xpRequiredForNextLevel} xp  Level: ${level}`);
+        });
+         
     }
 
     if (commandName === 'game'){
