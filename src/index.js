@@ -184,7 +184,6 @@ module.exports = async (client, message) => {
     if (!message.inGuild() || message.author.bot) return;
     
     let char = message.content.length
-    //let xp = Math.ceil(Math.log(5(char)+10)*6)
 
     const query = {
         userId: message.author.id,
@@ -277,11 +276,12 @@ client.once('ready', async () => {
         db.run('DROP TABLE users');
 
         db.run('CREATE TABLE IF NOT EXISTS users(username TEXT PRIMARY KEY, xp INT, level INT)');
+        console.log('Connected to DB!')
     });
     
      
 
-    console.log('Connected to DB!')
+    
 
     client.user.setActivity({
         name: 'this server...',
@@ -347,9 +347,13 @@ client.on('messageCreate', msg => {
     db.serialize(() => {
         let userRegistered = false;
         let username = msg.author.username;
-        db.each(`SELECT username FROM users WHERE username = ${username}`), (name) =>{
+        db.run(`INSERT INTO users(username) VALUES(${username})`)
+        console.log("the problem is around here")
+        /*db.each(`SELECT * FROM users WHERE username = ${username}`), (name) =>{
             userRegistered = true;
         }
+        
+        
 
         let char = msg.content.length;
         const xpIncrease = Math.ceil(Math.log(5 * (char)+10)*6);
@@ -369,7 +373,7 @@ client.on('messageCreate', msg => {
                 db.run(`UPDATE users SET xp = ${xp+ xpIncrease} WHERE username = ${username}`);
             }
         }
-        
+        */
     });
      
 
@@ -469,7 +473,7 @@ client.on('interactionCreate', async interaction => {
         });
          
     }
-
+    
     // Command Reponses
     if (commandName === 'sayhello'){
         await interaction.reply(`heya ${interaction.user}!`);
@@ -661,4 +665,4 @@ client.on('messageReactionAdd', async (reaction, user) => {
     });
 });
 
-client.login(token); 
+client.login(token);
